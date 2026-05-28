@@ -1,0 +1,45 @@
+{
+  "liveServer.settings.donotShowInfoMsg": true,
+
+  // Font тохиргоо
+  "editor.fontSize": 14,
+  "editor.fontFamily": "Fira Code, Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.lineHeight": 24,
+
+  // Editing тохиргоо
+  "editor.wordWrap": "off",
+  "editor.cursorBlinking": "smooth",
+  "editor.minimap.enabled": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+
+  // Auto формат
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.printWidth": 140,
+  "prettier.singleAttributePerLine": false,
+
+  // File тохиргоо
+  "files.trimFinalNewlines": true,
+  "files.autoSave": "onFocusChange",
+
+  // Explorer
+  "explorer.sortOrder": "type",
+
+  // Language specific formatter
+  "[html]": {
+    "editor.defaultFormatter": null
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.editor.enablePreview": false
+}
