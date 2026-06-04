@@ -31,6 +31,61 @@ export function buildFoodGroups(data) {
     items: Array.from(group.items.values()).sort((a, b) => getLocalizedValue(a.food_name).localeCompare(getLocalizedValue(b.food_name))),
   }));
 }
+/* Оролтын өгөгдөл:
+  const data = [
+    {
+      food_group: "Cereals and Cereal products",
+      food_code: "01_0106",
+      food_name: "Barley flour, whole grain",
+    },
+    {
+      food_group: "Cereals and Cereal products",
+      food_code: "01_0101",
+      food_name: "Rice",
+    },
+    {
+      food_group: "Vegetables",
+      food_code: "02_0001",
+      food_name: "Carrot",
+    },
+    {
+      food_group: "Vegetables",
+      food_code: "02_0002",
+      food_name: "Potato",
+    },
+  ];
+
+Функц food_group-ээр бүлэглэнэ. Гаралтын өгөгдөл:
+[
+  {
+    groupName: "Cereals and Cereal products",
+    items: [
+      {
+        food_code: "01_0106",
+        food_name: "Barley flour, whole grain",
+      },
+      {
+        food_code: "01_0101",
+        food_name: "Rice",
+      },
+    ],
+  },
+  {
+    groupName: "Vegetables",
+    items: [
+      {
+        food_code: "02_0001",
+        food_name: "Carrot",
+      },
+      {
+        food_code: "02_0002",
+        food_name: "Potato",
+      },
+    ],
+  },
+];
+*/
+
 let nutritionData = [];
 
 export function initNutritionData(data) {
@@ -184,4 +239,52 @@ function setResultHtml(html) {
 export function renderDefaultTables(data) {
   const defaultItems = data.slice(0, DEFAULT_ITEM_COUNT);
   return renderNutritionTables(defaultItems, DEFAULT_TYPES);
+}
+
+// Overview page-аас шилжихдээ хайх үгийг хадгалсан бол тэр үгээр хайх үйлдлийг автоматаар хийх функц
+export function applyPendingSelectedFoodsFromOverview() {
+  const raw = sessionStorage.getItem("pendingSelectedFoods");
+  if (!raw) return;
+
+  let selectedFoods = [];
+
+  try {
+    selectedFoods = JSON.parse(raw);
+  } catch (error) {
+    console.error("Invalid pendingSelectedFoods:", error);
+    sessionStorage.removeItem("pendingSelectedFoods");
+    return;
+  }
+
+  if (!Array.isArray(selectedFoods) || !selectedFoods.length) {
+    sessionStorage.removeItem("pendingSelectedFoods");
+    return;
+  }
+
+  const searchTxt = document.getElementById("searchTxt");
+  const searchSection = document.getElementById("search");
+
+  if (searchTxt) {
+    searchTxt.value = "";
+  }
+
+  document.querySelectorAll('input[name="foodcode"]').forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+
+  selectedFoods.forEach((food) => {
+    const checkbox = document.querySelector(`input[name="foodcode"][value="${food.food_code}"]`);
+
+    if (checkbox) {
+      checkbox.checked = true;
+    }
+  });
+
+  handleFoodCodeSearch();
+
+  if (searchSection) {
+    searchSection.scrollIntoView({ behavior: "smooth" });
+  }
+
+  sessionStorage.removeItem("pendingSelectedFoods");
 }
