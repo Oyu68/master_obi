@@ -1,6 +1,7 @@
-import { titleFromKey } from "../fn/format.js";
+import { titleFromKey, escapeHtml } from "../fn/format.js";
 import { renderTable } from "../layouts/tableLayout.js";
 import { renderNotification } from "../layouts/notificationLayout.js";
+import { getImagesByFoodCode } from "../services/imageService.js";
 
 /* Хайлтын үр дүнгийн хүснэгтийг харуулах хэсэг
 items = хайгаад олсон хүнсний найрлагын json өгөгдөл
@@ -42,6 +43,33 @@ function renderTableByType(type, items) {
   if (type === "images") {
     return renderTable({
       title: "Images",
+      columns: [
+        {
+          key: "food_name",
+          label: "Food name",
+        },
+        {
+          key: "number_of_images",
+          label: "Number of Images",
+          render: (item) => {
+            const images = getImagesByFoodCode(item.food_code);
+            const count = images.length;
+
+            return count > 0
+              ? `
+                <span
+                  class="tag is-primary image-count-tag open-image-btn"
+                  data-foodcode="${escapeHtml(item.food_code)}"
+                  data-foodname="${escapeHtml(item.food_name)}"
+                >
+                  ${count}
+                </span>
+              `
+              : "-";
+          },
+        },
+      ],
+      rows: items,
     });
   }
 
@@ -106,26 +134,3 @@ function renderTableByType(type, items) {
     rows,
   });
 }
-/* renderTable({
-  title: "Vitamins",
-
-  columns: [
-    { key: "food_name", label: "Food name" },
-     
-    { key: "Vitamin A (μg)", label: "Vitamin A (μg)" },
-    { key: "Thiamin (mg)", label: "Thiamin (mg)" },
-  ],
-
-  rows: [
-    {
-      food_name: "Barley flour, whole grain",
-      "Vitamin A (μg)": 1,
-      "Thiamin (mg)": 0.28,
-    },
-    {
-      food_name: "Barley flour, whole grain, pearled",
-      "Vitamin A (μg)": 1,
-      "Thiamin (mg)": 0.421,
-    },
-  ],
-}); */
